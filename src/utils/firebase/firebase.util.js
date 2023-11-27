@@ -1,6 +1,6 @@
 import { initializeApp } from 'firebase/app';
 import { getAuth, signInWithPopup, GoogleAuthProvider, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged } from 'firebase/auth';
-import { getFirestore, doc, getDoc, setDoc } from 'firebase/firestore'
+import { getFirestore, doc, getDoc, setDoc, collection, writeBatch, query, getDocs } from 'firebase/firestore'
 
 
 // Your web app's Firebase configuration
@@ -43,6 +43,34 @@ export const onAuthStateChangedListener = (callback) => onAuthStateChanged(auth,
 
 //storage
 export const db = getFirestore();
+
+//params: table name   //records     //field whose value is to be used as id
+export const addCollectionAndDocuments = async (collectionKey, objectsToAdd, fieldOfTitle) => {
+    const collectionRef = collection(db, collectionKey);
+    const batch = writeBatch(db);
+
+    objectsToAdd.forEach(object => {
+        const docRef = doc(collectionRef, object[fieldOfTitle].toLowerCase());
+        batch.set(docRef, object);
+    })
+
+    await batch.commit();
+    console.log('Done');
+}
+
+export const getCategoriesAndDocuments = async () => {
+    const collectionRef = collection(db, 'categories');
+    const q = query(collectionRef);
+    const querySnapshot = await getDocs(q);
+
+    const categoryMap = querySnapshot.docs.reduce((acc, docSnapshot) => {
+        const { title, items } = docSnapshot.data();
+        acc[title.toLowerCase()] = items;
+        return acc;
+    }, {})
+
+    return categoryMap;
+}
 
 export const createUserDocumentFromAuth = async (userAuth, dispName) => {
     if (!userAuth) return;
