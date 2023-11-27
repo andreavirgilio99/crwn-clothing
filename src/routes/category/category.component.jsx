@@ -7,14 +7,10 @@ import ProductCard from '../../components/product-card/product-card.component';
 const Category = () => {
     const { category } = useParams()
     const { categoriesMap } = useContext(CategoriesContext);
-    let [products, setProducts] = useState([]);
-    console.log('after initializing: ', products)
+    let [products, setProducts] = useState(categoriesMap[category]);
 
     useEffect(() => {
-        if (categoriesMap && categoriesMap[category]) {
-            setProducts(categoriesMap[category])
-            console.log('setting products in effect')
-        }
+        setProducts(categoriesMap[category])
     },
         [category, categoriesMap]
     )
@@ -22,7 +18,7 @@ const Category = () => {
     return (
         <div className='category-container'>
             {
-                categoriesMap[category] && products.map((product) => <ProductCard key={product.id} product={product} />)
+                products && products.map((product) => <ProductCard key={product.id} product={product} />)
             }
         </div>
     )
