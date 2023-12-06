@@ -13,7 +13,6 @@ export const CategoriesContextProvider = ({ children }) => {
         const getCategoriesMap = async () => {
             const categoryMap = await getCategoriesAndDocuments();
             setCategoriesMap(categoryMap)
-            console.log('setting categories map')
         }
 
         getCategoriesMap();
