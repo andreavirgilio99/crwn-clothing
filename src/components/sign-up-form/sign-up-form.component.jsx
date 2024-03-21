@@ -3,8 +3,11 @@ import { createAuthUserWithEmailAndPassword, createUserDocumentFromAuth } from "
 import FormInput from "../form-input/form-input.component";
 import Button from "../button/button.component";
 import { SIgnupContainer } from "./sign-up-form.styles";
+import { useNavigate } from "react-router-dom";
 
 const SignUpForm = () => {
+
+    const navigate = useNavigate()
 
     const defaultFormFields = {
         displayName: '',
@@ -31,7 +34,9 @@ const SignUpForm = () => {
             console.log('errore', error)
         }
 
+
         resetFormFields();
+        navigate('/')
     };
 
     const onChangeHandler = (event) => {

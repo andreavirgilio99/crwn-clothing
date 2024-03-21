@@ -4,8 +4,10 @@ import FormInput from "../form-input/form-input.component";
 import './sign-in-form.styles.jsx';
 import Button, { BUTTON_TYPE_CLASSES } from "../button/button.component";
 import { ButtonsContainer, SignupContainer } from "./sign-in-form.styles";
+import { useNavigate } from "react-router-dom";
 
 const SignInForm = () => {
+    const navigate = useNavigate()
 
     const defaultFormFields = {
         email: '',
@@ -26,6 +28,8 @@ const SignInForm = () => {
         } catch (error) {
             console.log(error)
         }
+
+        navigate('/')
     }
 
     const onSubmitHandler = async (event) => {
@@ -43,6 +47,7 @@ const SignInForm = () => {
             }
         }
 
+        navigate('/')
         resetFormFields();
     };
 

@@ -1,5 +1,5 @@
 import React, { createContext, useEffect, useState } from 'react';
-import './notification.styles.scss'
+import { Notification } from '../components/notification/notification.component';
 
 const refreshCartState = (itemsSetterFunction) => {
     const cartItems = JSON.parse(localStorage.getItem('cart'));
@@ -11,7 +11,6 @@ const refreshCartState = (itemsSetterFunction) => {
 
 const addCartItem = (cartItems, productToAdd) => {
     const filteredArray = cartItems.filter((item) => item.id === productToAdd.id);
-
     if (filteredArray.length > 0) {
         filteredArray[0].quantity++;
     } else {
@@ -49,29 +48,6 @@ export const CartContext = createContext({
     removeItemFromCart: () => { },
 });
 
-const Notification = ({ message, onClose }) => {
-    let [haveOpacity, setHaveOpacity] = useState(false)
-    let [showNotification, setShowNotification] = useState(true)
-
-    useEffect(() => {
-        setTimeout(() => {
-            console.log('closing component')
-            setShowNotification(false);
-        }, 2500);
-
-        setTimeout(() => {
-            console.log('disappearing effect')
-            setHaveOpacity(true)
-        }, 2000);
-    }, [onClose]);
-
-    return (
-        showNotification && (<div className="notification" style={haveOpacity ? { opacity: '0' } : {}}>
-            {message}
-        </div>)
-    );
-};
-
 export const CartContextProvider = ({ children }) => {
     const [isCartOpen, setIsCartOpen] = useState(false);
     const [cartItems, setCartItems] = useState([]);
@@ -87,7 +63,12 @@ export const CartContextProvider = ({ children }) => {
         setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
     };
 
-    const removeItemFromCart = (productToRemove) => setCartItems(removeCartItem(cartItems, productToRemove));
+    const removeItemFromCart = (productToRemove) => {
+        setCartItems(removeCartItem(cartItems, productToRemove))
+
+        const newNotification = `${productToRemove.name} has been removed from the cart`;
+        setNotifications((prevNotifications) => [...prevNotifications, newNotification]);
+    };
 
     /*const closeNotification = (index) => {
         setNotifications((prevNotifications) => prevNotifications.filter((_, i) => i !== index));
